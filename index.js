@@ -8,8 +8,7 @@
 
 //dependencies
 const http = require('http');
-const url = require('url');
-const {StringDecoder} = require("string_decoder");
+const {handlereqres} = require('./helpers/handlereqres');
 
 //app object - module scaffolding
 const app = {};
@@ -27,28 +26,9 @@ app.createServer = () => {
     });
 };
 
-//handle Request Response
-app.handleReqRes = (req, res) => {
-    //Request handle
-    const parsedUrl = url.parse(req.url, true);
-    const path = parsedUrl.pathname;
-    const trimmedUrl = path.replace(/^\/+$/g, '');
-    const method = req.method.toLowerCase();
-    const queryStringObject = parsedUrl.query;
-    const headersObject = req.headers;
+//handle request response
+app.handleReqRes = handlereqres;
 
-    const decoder = new StringDecoder('utf-8');
-    let resultData = '';
-    req.on('data', (buffer) => {
-        resultData += decoder.write(buffer);
-    })
-    req.on('end', () => {
-        resultData += decoder.end();
-        console.log(resultData);
-    })
-    console.log(queryStringObject);
-    //response handle
-};
 
 //start server
 app.createServer();
