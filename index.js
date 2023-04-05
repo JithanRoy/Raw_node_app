@@ -10,10 +10,20 @@
 const http = require('http');
 const { handleReqRes } = require('./helpers/handlereqres');
 const environment = require('./helpers/environments');
+const data = require('./lib/data');
 
 // app object - module scaffolding
 const app = {};
 
+const sampleObjects = {
+    'name': 'Bangladesh',
+    'language': 'English',
+}
+
+//testing file system
+data.create('test', 'newFile', sampleObjects, (err) => {
+    console.log(`error was`, err);
+})
 
 // create server
 app.createServer = () => {
