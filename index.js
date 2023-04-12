@@ -21,8 +21,12 @@ const sampleObjects = {
 }
 
 //testing file system
-data.create('test', 'newFile', sampleObjects, (err) => {
-    console.log(`error was`, err);
+// data.create('test', 'newFile', sampleObjects, (err) => {
+//     console.log(`error was`, err);
+// })
+
+data.read('test', 'newFile', (err, data) => {
+    console.log(err,data); 
 })
 
 // create server
