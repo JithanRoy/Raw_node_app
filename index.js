@@ -16,17 +16,26 @@ const data = require('./lib/data');
 const app = {};
 
 const sampleObjects = {
-    'name': 'Bangladesh',
-    'language': 'English',
+    'name': 'Singapore',
+    'language': 'Bangla',
+    'description': 'valuable'
 }
 
-//testing file system
+// testing file system
 // data.create('test', 'newFile', sampleObjects, (err) => {
 //     console.log(`error was`, err);
 // })
 
-data.read('test', 'newFile', (err, data) => {
-    console.log(err,data); 
+// data.read('test', 'newFile', (err, data) => {
+//     console.log(err,data); 
+// })
+
+// data.update('test', 'newFile', sampleObjects, (err, data) => {
+//     console.log("updated data is", data, err);
+// })
+
+data.delete('test', 'newFile', (err) => {
+    console.log(err);
 })
 
 // create server
