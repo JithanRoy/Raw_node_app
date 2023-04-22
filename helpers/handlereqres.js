@@ -4,24 +4,26 @@ const url = require('url');
 const {StringDecoder} = require("string_decoder");
 const routes = require('../routes');
 const {notFoundHandler} = require('./../handlers/routeHandlers/notFoundHandler');
+const {parseJSON} = require('../helpers/utilities')
 
 //module scaffolding
-const handler = {};
+const handlers = {};
 
 //handle Request Response
-handler.handleReqRes = (req, res) => {
+handlers.handleReqRes = (req, res) => {
     //Request handle
     const parsedUrl = url.parse(req.url, true);
     const path = parsedUrl.pathname;
-    const trimmedUrl = path.replace(/^\/+$/g, '');
+    const trimmedPath = path.replace(/^\/+|\/+$/g, '');
     const method = req.method.toLowerCase();
     const queryStringObject = parsedUrl.query;
     const headersObject = req.headers;
 
+    // console.log(parsedUrl, path, trimmedPath);
     const requestProperties = {
         parsedUrl,
         path,
-        trimmedUrl,
+        trimmedPath,
         method,
         queryStringObject,
         headersObject,
@@ -30,19 +32,7 @@ handler.handleReqRes = (req, res) => {
     const decoder = new StringDecoder('utf-8');
     let resultData = '';
 
-    const chosenHandler = routes[trimmedUrl] ? routes[trimmedUrl] : notFoundHandler;
-
-    chosenHandler(requestProperties, (statusCode, payload) => {
-        statusCode = typeof(statusCode) === 'number' ? statusCode : 500;
-        payload = typeof(payload) === 'object' ? payload : {};
-
-        const payloadString = JSON.stringify(payload);
-        console.log(payloadString);
-
-        //return the final response
-        res.writeHead(statusCode);
-        res.end(payloadString);
-    });
+    const chosenHandler = routes[trimmedPath] ? routes[trimmedPath] : notFoundHandler;
 
     req.on('data', (buffer) => {
         resultData += decoder.write(buffer);
@@ -50,9 +40,22 @@ handler.handleReqRes = (req, res) => {
 
     req.on('end', () => {
         resultData += decoder.end();
-        console.log(resultData);
+        
+        requestProperties.body = parseJSON(resultData);
+        console.log(requestProperties.body);
+        chosenHandler(requestProperties, (statusCode, payload) => {
+            statusCode = typeof(statusCode) === 'number' ? statusCode : 500;
+            payload = typeof(payload) === 'object' ? payload : {};
+
+            const payloadString = JSON.stringify(payload);
+            console.log(payloadString);
+
+            //return the final response
+            res.setHeader('Content-Type', 'application/json');
+            res.writeHead(statusCode);
+            res.end(payloadString);
+        });
     })
-    //response handle
 };
 
-module.exports = handler;
+module.exports = handlers;

@@ -14,7 +14,6 @@ const environment = require('./helpers/environments');
 // app object - module scaffolding
 const app = {};
 
-
 // create server
 app.createServer = () => {
     const server = http.createServer(app.handleReqRes);
