@@ -11,9 +11,15 @@ const http = require('http');
 const { handleReqRes } = require('./helpers/handlereqres');
 const environment = require('./helpers/environments');
 const data = require('./lib/data');
+const { sendTwiloSms } = require('./helpers/notifications');
 
 // app object - module scaffolding
 const app = {};
+
+// @Todo @remove it later
+sendTwiloSms('01521327660', 'hello world', (err) => {
+    console.log('this is an error', err);
+});
 
 // const sampleObjects = {
 //     'name': 'Singapore',
@@ -27,7 +33,7 @@ const app = {};
 // })
 
 // data.read('test', 'newFile', (err, data) => {
-//     console.log(err,data); 
+//     console.log(err,data);
 // })
 
 // data.update('test', 'newFile', sampleObjects, (err, data) => {
